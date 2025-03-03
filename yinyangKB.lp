@@ -1,49 +1,34 @@
 #const n=4.
+dominio(1..n).
+color(white;black).
 
-white(1, 4).
-black(2, 4).
-black(3, 2).
-white(3, 3).
-white(4, 4).
+_drawcircle(1, 4, white).
+_drawcircle(2, 4, black).
+_drawcircle(3, 2, black).
+_drawcircle(3, 3, white).
+_drawcircle(4, 4, white).
 
-% Reglas de propagación (se pueden evaluar tras grounding mediante operaciones en el cuerpo)
-white(X-1,Y) :- white(X,Y), X-1 > 0, not black(X-1,Y).
-black(X-1,Y) :- black(X,Y), X-1 > 0, not white(X-1,Y).
+1{_drawcircle(X,Y,C):color(C)}1:-dominio(X), dominio(Y).
 
-white(X+1,Y) :- white(X,Y), X+1 <= n, not black(X+1,Y).
-black(X+1,Y) :- black(X,Y), X+1 <= n, not white(X+1,Y).
+%No puede haber cuadrados 2x2 del mismo color
+:- _drawcircle(X,Y,C),_drawcircle(X,Y+1,C),_drawcircle(X+1,Y,C),_drawcircle(X+1,Y+1,C), X+1 <= n, Y+1 <= n.
+%No puede haber diagonales (video)
+:- _drawcircle(X,Y,C),_drawcircle(X,Y+1,C'),_drawcircle(X+1,Y,C'),_drawcircle(X+1,Y+1,C), X+1 <= n, Y+1 <= n.
 
-white(X,Y-1) :- white(X,Y), Y-1 > 0, not black(X,Y-1).
-black(X,Y-1) :- black(X,Y), Y-1 > 0, not white(X,Y-1).
+%Definimos un predicado auxiliar (cierre transitivo)
+vecino(X,Y,X-1,Y):- dominio(X),dominio(Y),X>=1.
+vecino(X,Y,X+1,Y):- dominio(X),dominio(Y),X<n.
+vecino(X,Y,X,Y-1):- dominio(X),dominio(Y),Y>=1.
+vecino(X,Y,X,Y+1):- dominio(X),dominio(Y),Y<n.
 
-white(X,Y+1) :- white(X,Y), Y+1 <= n, not black(X,Y+1).
-black(X,Y+1) :- black(X,Y), Y+1 <= n, not white(X,Y+1).
+%eligimos una celda inicial (única por color)
+1{start(X,Y,C):_drawcircle(X,Y,C)}1:-color(C).
 
-% Restricciones para evitar cuadrados 2x2 del mismo color
-:- white(X,Y), white(X,Y+1), white(X+1,Y), white(X+1,Y+1), X+1 <= n, Y+1 <= n.
-:- black(X,Y), black(X,Y+1), black(X+1,Y), black(X+1,Y+1), X+1 <= n, Y+1 <= n.
+%propagamos desde la celda inicial a vecinos del mismo color
+reach(X,Y,C):-start(X,Y,C).
+reach(X2,Y2,C):-reach(X1,Y1,C), vecino(X1,Y1,X2,Y2), _drawcircle(X2,Y2,C).
 
-% Restricciones para evitar diagonales (video)
-:- white(X,Y), white(X+1,Y+1), black(X,Y+1), black(X+1,Y), X+1 <= n, Y+1 <= n.
-:- black(X,Y), black(X+1,Y+1), white(X,Y+1), white(X+1,Y), X+1 <= n, Y+1 <= n.
+%restricción de conectividad
+:- _drawcircle(X,Y,C), not reach(X,Y,C).
 
-% Dominio de posiciones
-pos(1..n).
-
-%MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL
-% Borde superior (fila 1) → borde inferior (fila n):
-black(D,1),black(D,n),black(n,D) :- black(1,A), white(1,B), black(1,C), A < B, B < C, pos(D), D >= A, D <= C.
-white(n,D),white(D,n),white(n,D) :- white(1,A), black(1,B), white(1,C), A < B, B < C, pos(D), D >= A, D <= C.
-
-% Borde inferior (fila n) → borde superior (fila 1):
-black(1,D),black(D,1),black(D,n) :- black(n,A), white(n,B), black(n,C), A < B, B < C, pos(D), D >= A, D <= C.
-white(1,D),white(D,1),black(D,n) :- white(n,A), black(n,B), white(n,C), A < B, B < C, pos(D), D >= A, D <= C.
-
-% Borde izquierdo (columna 1) → borde derecho (columna n):
-black(D,n) :- black(A,1), white(B,1), black(C,1), A < B, B < C, pos(D), D >= A, D <= C.
-white(D,n) :- white(A,1), black(B,1), white(C,1), A < B, B < C, pos(D), D >= A, D <= C.
-
-% Borde derecho (columna n) → borde izquierdo (columna 1):
-black(D,1) :- black(A,n), white(B,n), black(C,n), A < B, B < C, pos(D), D >= A, D <= C.
-white(D,1) :- white(A,n), black(B,n), white(C,n), A < B, B < C, pos(D), D >= A, D <= C.
-
+#show _drawcircle/3.
