@@ -23,6 +23,9 @@ at(X,Y,C) :- reachable(X,Y, _, _, C).
 % Que estén todos conectados
 :- at(X,Y,C), not reachable(_,_,X,Y,C), not anchor(X,Y,C).
 
+% No puede haber diagonales
+:- at(X,Y,C), at(X+1,Y,C'), at(X,Y+1,C'), at(X+1, Y+1, C), color(C), color(C'), C!=C'.
+
 _drawcircle(X-1,Y-1,C) :- at(X,Y,C).
 
 #show at/3.
