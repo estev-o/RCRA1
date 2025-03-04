@@ -5,8 +5,11 @@ import re
 
 #### VARIABLES DEL PROGRAMA ####
 filenameRegex = r"^dom\d+.txt"
-whiteTemplate = "white(ROW, COL)."
-blackTemplate = "black(ROW, COL)."
+whiteTemplate = "at(ROW, COL, white)."
+blackTemplate = "at(ROW, COL, black)."
+whiteAnchorTemplate = "anchor(ROW, COL, white)."
+blackAnchorTemplate = "anchor(ROW, COL, black)."
+nTemplate = "#const n=N."
  
 # que valores recibira un elemento que este en la primera fila y en la primera columna
 # en representacion de clingo (se usa para generar las posiciones del resto de elementos)
@@ -19,7 +22,7 @@ def usage():
     print("                     ")
     print("<dir>: directorio con archivos con formato domX.txt")
 
-def changeException(filename, ext):
+def changeExtension(filename, ext):
     dotIndex = filename.rfind('.')
     newFilename = filename[:dotIndex] + ext
     return newFilename
@@ -38,21 +41,40 @@ def parseChar(char, row, col):
         ""
 
 def parseFile(filePath):
-    newFilename = changeException(filePath, ".lp")
+    newFilename = changeExtension(filePath, ".lp")
     file = open(filePath, "r")
     newFile = open(newFilename, "w")
 
     row = rowStart
+    anchorWhite = False
+    anchorBlack = False
+
     for line in file:
+        if line == "\n":
+            continue
         col = colStart
         
         for char in line:
             parsed = parseChar(char,row,col)
             if parsed:
+                
+                if not anchorBlack and char == '1':
+                    blackAnchor = parse(row,col, blackAnchorTemplate)
+                    newFile.write(blackAnchor + "\n")
+                    anchorBlack = True
+                if not anchorWhite and char == '0':
+                    whiteAnchor = parse(row,col, whiteAnchorTemplate)
+                    newFile.write(whiteAnchor + "\n")
+                    anchorWhite = True
+
                 newFile.write(parsed + "\n")
+            
             col += 1
 
         row += 1
+    
+    n = nTemplate.replace("N", str(row-1))
+    newFile.write(n + "\n")
     
     newFile.close()
     file.close()
@@ -77,5 +99,5 @@ if __name__ == "__main__":
         sys.exit(0)
     else :
         usage()
-        print("ERROR: " + dir + "no es un directorio")
+        print("ERROR: " + path + "no es un directorio")
         sys.exit(1)
