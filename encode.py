@@ -5,10 +5,10 @@ import re
 
 #### VARIABLES DEL PROGRAMA ####
 filenameRegex = r"^dom\d+.txt"
-whiteTemplate = "at(ROW, COL, white)."
-blackTemplate = "at(ROW, COL, black)."
-whiteAnchorTemplate = "anchor(ROW, COL, white)."
-blackAnchorTemplate = "anchor(ROW, COL, black)."
+whiteTemplate = "circle(ROW, COL, white)."
+blackTemplate = "circle(ROW, COL, black)."
+whiteAnchorTemplate = "start(ROW, COL, white)."
+blackAnchorTemplate = "start(ROW, COL, black)."
 nTemplate = "#const n=N."
  
 # que valores recibira un elemento que este en la primera fila y en la primera columna
