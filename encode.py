@@ -7,8 +7,6 @@ import re
 filenameRegex = r"^dom\d+.txt"
 whiteTemplate = "circle(ROW, COL, white)."
 blackTemplate = "circle(ROW, COL, black)."
-whiteAnchorTemplate = "start(ROW, COL, white)."
-blackAnchorTemplate = "start(ROW, COL, black)."
 nTemplate = "#const n=N."
  
 # que valores recibira un elemento que este en la primera fila y en la primera columna
@@ -46,8 +44,6 @@ def parseFile(filePath):
     newFile = open(newFilename, "w")
 
     row = rowStart
-    anchorWhite = False
-    anchorBlack = False
 
     for line in file:
         if line == "\n":
@@ -57,16 +53,6 @@ def parseFile(filePath):
         for char in line:
             parsed = parseChar(char,row,col)
             if parsed:
-                
-                if not anchorBlack and char == '1':
-                    blackAnchor = parse(row,col, blackAnchorTemplate)
-                    newFile.write(blackAnchor + "\n")
-                    anchorBlack = True
-                if not anchorWhite and char == '0':
-                    whiteAnchor = parse(row,col, whiteAnchorTemplate)
-                    newFile.write(whiteAnchor + "\n")
-                    anchorWhite = True
-
                 newFile.write(parsed + "\n")
             
             col += 1
