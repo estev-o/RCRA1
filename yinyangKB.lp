@@ -38,6 +38,16 @@ extremo(X,n,C) :- circle(X,n,C).
 :- extremo(1, Y1, C1), extremo(n, Y2, C2), extremo(X3, 1, C3), extremo(X4, n, C4), C1=C2, C3!=C1, C4=C3.
 :- extremo(X1, 1, C1), extremo(X1, n, C2), extremo(1, X3, C3), extremo(n, X4, C4), C1=C2, C3!=C1, C4=C3.
 
+
+% Se generan rectas que separan el espacio
+recta (X1, Y1, X2, Y2, C) :- extremo(X1, Y1, C), extremo(X2,Y2,C), (X1, Y1) < (X2, Y2).
+
+% No puede haber 2 puntos en los extremos del mismo color en diferentes lados de la linea
+:- recta(X1,Y1,X2,Y2,C), extremo(X3,Y3,C2), extremo(X4, Y4, C2), C!=C2,
+D1 = (X1 - X3) * (Y2 - Y1) - (Y1 - Y3) * (X2 - X1),
+D2 = (X1 - X4) * (Y2 - Y1) - (Y1 - Y4) * (X2 - X1),
+D1*D2 < 0.
+
 _drawcircle(X-1,Y-1,C) :- circle(X,Y,C).
 
 #show circle/3.
