@@ -16,9 +16,10 @@ colStart = 1
 ###############################
 
 def usage():
-    print("Uso: encode.py <dir>")
-    print("                     ")
-    print("<dir>: directorio con archivos con formato domX.txt")
+    print("Uso: encode.py [<dir> || <file>]")
+    print("                                ")
+    print("<dir>: directorio con archivos nombrados con formato domXX.txt")
+    print("<file>: archivo nombreado con formato domXX.txt")
 
 def changeExtension(filename, ext):
     dotIndex = filename.rfind('.')
@@ -83,7 +84,10 @@ if __name__ == "__main__":
     if os.path.isdir(path):
         parseDir(path)
         sys.exit(0)
+    elif os.path.isfile(path):
+        parseFile(path)
+        sys.exit(0)
     else :
         usage()
-        print("ERROR: " + path + "no es un directorio")
+        print("ERROR: " + path + " no es ni un directorio ni un archivo.")
         sys.exit(1)
