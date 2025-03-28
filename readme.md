@@ -1,5 +1,11 @@
-1. Ver video tutorial para añadir restricciones extras
-entregar REadme, el yinyangKB.lp y encode.py
+# Encode.py
+El script encode.py soporta tanto un archivo concreto como el directorio donde se encuentran los dominios.
+En caso de que se ejecute sobre un directorio lo que hará será codificar los dominios y guardarlos en el directorio de los dominios.
 
-
-ver par.lp porque en vez de comparar todas con por ejemplo negrasconectadas(x,y,x',y') usamos el mínimo y de ahí empezamos a conectar.
+```bash
+python3 encode.py examples
+```
+o
+```bash
+python3 encode.py examples/domXX.txt
+```
