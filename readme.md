@@ -16,3 +16,7 @@ El siguiente ejemplo muestra como ejecutar el solver sobre el dominio 0:
 ```bash
 clingo 0 yinyangKB.lp examples/dom00.lp
 ```
+Se podría ver la solución visualmente de la siguiente forma:
+```bash
+python3 display.py drawyinyang.lp yinyangKB.lp examples/dom00.lp
+```
