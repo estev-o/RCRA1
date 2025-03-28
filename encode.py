@@ -1,3 +1,4 @@
+#AUTORES: Estevo Aldea Arias, Alejandro Fernández Otero
 import sys
 import os
 from os import listdir
