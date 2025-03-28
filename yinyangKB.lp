@@ -1,3 +1,4 @@
+%AUTORES: Estevo Aldea Arias, Alejandro Fernández Otero
 dominio(1..n).
 color(white;black).
 
